@@ -1,0 +1,7 @@
+# Generated results
+result.txt
+
+# Compiled program
+main
+*.exe
+*.o
