@@ -2,6 +2,9 @@
 result.txt
 
 # Compiled program
+build/
 main
+main.DSYM
 *.exe
 *.o
+.vscode
