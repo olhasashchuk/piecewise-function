@@ -11,7 +11,7 @@
 #include "interface/colors.h"
 using namespace std;
 
-
+// it is beautifully written code for handling menu and input validation
 
 int main() {
   int choice = 0;
