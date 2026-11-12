@@ -1,6 +1,6 @@
 # Piecewise Function Calculator
 
-A C++ console application that calculates a piecewise function for values of x from a to b with a step h, using Formula 1.11.
+A C++ console application that calculates a piecewise function for values of x from a to b with a step h, using Formula.
 
 ## Author
 
@@ -8,7 +8,7 @@ A C++ console application that calculates a piecewise function for values of x f
 - **University:** NTU "Kharkiv Polytechnic Institute"
 - **Year:** 2026
 
-## Formula 1.11
+## Formula
 
 $$
 y =
