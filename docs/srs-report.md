@@ -100,12 +100,71 @@ A compatible C++ compiler and standard library are required to build the applica
 | FR-07 | If a manually entered value is invalid, the application shall display an error and ask the user to enter that parameter again. |
 | FR-08 | In file mode, the application shall read the parameters from `data.txt` in the order specified in Section 3.1. If it cannot open or read the file, or if a parameter fails validation, it shall display an error and return to the main menu without calculating. |
 | FR-09 | After loading valid file parameters, the application shall display them and ask for confirmation. It shall proceed on `y` or `Y`, switch to manual input on `n` or `N`, and repeat the prompt with an error for any other response. |
-| FR-10 | The application shall start at `x = a`, evaluate Formula for each `x ≤ b`, and increase `x` by `h` after each evaluation. If `a = b`, it shall evaluate the function once. |
-| FR-11 | The application shall display one row per calculated point in a console table with `x` and `y` columns. |
-| FR-12 | The application shall open `result.txt` for writing before evaluating the function. It shall write the input parameters and results table as plain text. If the file cannot be opened, the application shall report the error and return to the main menu without calculating. If a write fails, it shall report the failure. |
-| FR-13 | The application shall return to the main menu after completing a calculation. |
-| FR-14 | When the user selects **About the program**, the application shall show its purpose, the input requirements, and the formula, then return to the main menu. |
-| FR-15 | When the user selects **Exit**, the application shall display a farewell message and terminate. |
+| FR-10 | The application shall start at `x = a` and evaluate Formula for each value of `x` while `x <= b`, increasing `x` by `h` after each evaluation. If `a = b`, the application shall evaluate the function once. |
+| FR-11 | If `x < -5`, the application shall calculate the sum of `i + x` for `i` from `-6` to `n`, inclusive. It shall then calculate `y = 4 * x * sum - 9`. |
+| FR-12 | If `x >= -5`, the application shall calculate a product for each `i` from `1` to `n + 1`, inclusive. Each product shall contain the factors `(i - 2 * j) / (4 + x * x)` for `j` from `0` to `n - 3`, inclusive. The application shall add all the products to obtain `y`. |
+| FR-13 | The application shall display one row per calculated point in a console table with `x` and `y` columns. |
+| FR-14 | The application shall open `result.txt` for writing before evaluating the function. It shall write the input parameters and results table as plain text. If the file cannot be opened, the application shall report the error and return to the main menu without calculating. If a write fails, it shall report the failure. |
+| FR-15 | The application shall return to the main menu after completing a calculation. |
+| FR-16 | When the user selects **About the program**, the application shall show its purpose, the input requirements, and the formula, then return to the main menu. |
+| FR-17 | When the user selects **Exit**, the application shall display a farewell message and terminate. |
+
+## Detailed Calculation Requirements
+
+### FR-10 Calculate Function Values Over a Range
+
+- **Type:** Functional
+- **Priority:** High
+- **Source:** Laboratory assignment, Formula
+- **Description:** The application shall start at `x = a`. For each `x <= b`, it shall select the applicable branch of Formula, calculate `y`, and increase `x` by `h`. It shall stop when the next value of `x` exceeds `b`.
+- **Rationale:** The user needs function values at the points defined by the selected range and step.
+- **Preconditions:** The calculation has been requested, the input values have passed validation, and `b >= a`, `h > 0`, and `n >= 3`.
+- **Inputs:** `a` (start), `b` (end), `h` (step), and `n` (integer parameter).
+- **Expected Result:** One `(x, y)` pair is calculated for every point reached by the step within the range.
+- **Dependencies:** Input validation, FR-11, and FR-12.
+- **Status:** Implemented
+
+**Acceptance Criteria**
+
+1. Given `a = -6`, `b = -4`, `h = 1`, and `n = 3`, the application shall calculate three values, for `x = -6`, `x = -5`, and `x = -4`, in that order.
+2. Given `a = 0`, `b = 5`, `h = 2`, and `n = 3`, the application shall calculate values for `x = 0`, `x = 2`, and `x = 4`. It shall not calculate a value for `x = 5` or `x = 6`.
+3. Given `a = b = -5`, `h = 1`, and `n = 3`, the application shall calculate exactly one value using FR-12.
+
+### FR-11 Calculate the First Branch
+
+- **Type:** Functional
+- **Priority:** High
+- **Source:** Laboratory assignment, Formula, first branch
+- **Description:** When `x < -5`, the application shall add the terms `i + x` for every integer `i` from `-6` through `n`. It shall calculate `y = 4 * x * sum - 9`, where `sum` is the sum of those terms.
+- **Rationale:** Formula defines this expression for every calculation point below `-5`.
+- **Preconditions:** FR-10 has selected a value of `x < -5`, and `n` is a validated integer with `n >= 3`.
+- **Inputs:** The current value of `x` and the parameter `n`.
+- **Expected Result:** One value of `y` for the current `x`, calculated using the first branch.
+- **Dependencies:** Input validation and the current calculation point provided by FR-10.
+- **Status:** Implemented
+
+**Acceptance Criteria**
+
+1. The sum shall include both endpoint terms, for `i = -6` and `i = n`.
+2. Given `x = -6` and `n = 3`, the sum shall be `-75`, and the application shall calculate `y = 1791`.
+
+### FR-12 Calculate the Second Branch
+
+- **Type:** Functional
+- **Priority:** High
+- **Source:** Laboratory assignment, Formula, second branch
+- **Description:** When `x >= -5`, the application shall calculate one product for each integer `i` from `1` through `n + 1`. Each product shall include the factor `(i - 2 * j) / (4 + x * x)` for every integer `j` from `0` through `n - 3`. The application shall add all the products to obtain `y`.
+- **Rationale:** Formula defines this expression for calculation points at or above `-5`.
+- **Preconditions:** FR-10 has selected a value of `x >= -5`, and `n` is a validated integer with `n >= 3`.
+- **Inputs:** The current value of `x` and the parameter `n`.
+- **Expected Result:** One value of `y` for the current `x`, calculated using the second branch.
+- **Dependencies:** Input validation and the current calculation point provided by FR-10.
+- **Status:** Implemented
+
+**Acceptance Criteria**
+
+1. Given `x = -5` and `n = 3`, the application shall use the second branch. Each product shall contain one factor (`j = 0`), and the result shall be `10 / 29` before rounding.
+2. Given `x = 0` and `n = 4`, the application shall calculate five products, each with two factors (`j = 0` and `j = 1`). The result shall be `1.5625`.
 
 **Formula**
 
@@ -144,10 +203,14 @@ Not applicable. Input and output use local text files.
 
 ### 3.7 Verification examples
 
+For successful calculation tests, run the application in a directory where it can create or overwrite `result.txt`.
+
 | Requirements | Input or action | Expected result |
 | --- | --- | --- |
-| FR-06, FR-10, FR-11 | Enter `a = -6`, `b = -5`, `h = 1`, `n = 3`. | The table contains two rows. For `x = -6`, `y = 1791`. For `x = -5`, `y ≈ 0.344828`. |
-| FR-06, FR-07 | Enter `h = 0` in manual mode. | The application displays an error and asks for `h` again. |
-| FR-08, FR-09 | Put `-6 -5 1 3` in `data.txt`, select file input, and answer `N`. | The application displays the loaded values, then prompts for manual input. |
-| FR-08 | Select file input with no `data.txt` in the current working directory. | The application reports the file error and returns to the main menu. |
-| FR-10, FR-12 | Enter `a = 0`, `b = 0`, `h = 1`, `n = 3` in a directory where the application can write `result.txt`. | The application displays one row with `x = 0` and `y = 2.5`. The file contains the input parameters and the same result row. |
+| FR-10, FR-11, FR-12, FR-13 | Enter `a = -6`, `b = -5`, `h = 1`, and `n = 3`. | The console table contains exactly two rows, in this order: `x = -6` with `y = 1791`, and `x = -5` with `y ≈ 0.344828`. The second branch is used at `x = -5`. |
+| FR-10, FR-13 | Enter `a = 0`, `b = 5`, `h = 2`, and `n = 3`. | The console table contains exactly three rows, in this order: `x = 0`, `x = 2`, and `x = 4`. There is no row for `x = 5` or `x = 6`. |
+| FR-06, FR-07 | Enter `h = 0` in manual mode. | The application displays an error and asks the user to enter `h` again. |
+| FR-08, FR-09 | Put `-6 -5 1 3` in `data.txt`, select file input, and answer `N` at the confirmation prompt. | The application displays the loaded values, then switches to manual input without calculating with the file values. |
+| FR-08 | Select file input when `data.txt` is missing from the current working directory. | The application displays a file error and returns to the main menu without calculating. |
+| FR-10, FR-12, FR-13, FR-14 | Enter `a = 0`, `b = 0`, `h = 1`, and `n = 3`. | The console table contains exactly one row: `x = 0`, `y = 2.5`. The `result.txt` file contains the four input parameters and the same result row. |
+| FR-12, FR-13 | Enter `a = 0`, `b = 0`, `h = 1`, and `n = 4`. | The console table contains one row with `x = 0` and `y = 1.5625`. This verifies the second branch when each product contains two factors. |
